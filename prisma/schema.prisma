@@ -1,0 +1,38 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Service{
+  id  Int @id @default(autoincrement())
+  owner Student  @relation(fields: [student_id], references: [id])
+  student_id Int
+  class Class?
+  is_starting Int @default(1)
+}
+
+model Student{
+  id  Int     @id @default(autoincrement())
+  student_code  String  @unique
+  telegram   String  @unique
+  password  String 
+  service Service[]
+}
+
+model Class{
+  id  Int     @id @default(autoincrement())
+  service Service @relation(fields: [service_id], references: [id])
+  service_id Int
+  class_code String
+  name String
+  day_of_week Int
+  from Int
+  to Int
+}
